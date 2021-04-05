@@ -1,0 +1,51 @@
+<html>
+<head>
+	<title>Computer Science Compiler</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="js/index.js"></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<form action="JavaScript:yourName()" style="display: inline">
+		<label for="fname">First name:</label>
+		<input type="text" id="fname" name="fname">
+		<label for="lname">Last name:</label>
+		<input type="text" id="lname" name="lname"><br><br>
+		<label>Event:</label>
+		<select id="events"></select>
+		<label>Year:</label>
+		<select id="year"></select><br><br>
+		<label>Conference:</label>
+		<select id="region"></select>
+		<label>District:</label>
+		<input type="number" id="district" min="1" max="32" value="20"></input>
+		<label>Region:</label>
+		<input type="number" id="reg" min="1" max="4" value="3"></input><br><br>
+		<label>Host Type:</label>
+		<select id="type" onchange="">
+			<option>District</option>
+			<option>Regional</option>
+			<option>State</option>
+		</select>
+		<label>Get statewide results: </label><input type="checkbox" id="czech">
+		<label>Get only within region results: </label><input type="checkbox" id="getonly">
+		<br><br>
+		<input type="submit" value="District Event Score">
+
+	</form><button onclick="getAllSchoolsAndSort()" style="display: inline">Get all scores for Event</button>   <button onclick="scrollToName()">Scroll to selection</button><br><br>
+
+	<div id="tableholder">
+		<table id="results">
+			<tr>
+				<th>Place</th>
+				<th>Contestant</th>
+				<th>Score</th>
+				<th>School</th>
+				<th>Skill</th>
+				<th>Percent</th>
+
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
