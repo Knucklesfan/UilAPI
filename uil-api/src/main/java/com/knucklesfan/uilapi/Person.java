@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 public class Person implements Serializable {
+    public String year;
     public String personName;
     public String schoolName;
     public String scoreNum;
@@ -32,7 +33,7 @@ public class Person implements Serializable {
         district = rgion;
 
     }
-    public Person(String name, String school, String score, String place,String event, String rgion, String dstrict) {
+    public Person(String name, String school, String score, String place,String event, String rgion, String dstrict, String yer) {
         personName = name;
         schoolName = school;
         scoreNum = score;
@@ -40,6 +41,7 @@ public class Person implements Serializable {
         scoreEvent = event;
         region = dstrict;
         district = rgion;
+        year = yer;
     }
 
 
@@ -60,6 +62,8 @@ public class Person implements Serializable {
         ar.put("place", placeNum);
         ar.put("region", region);
         ar.put("district", district);
+        ar.put("event", scoreEvent);
+        ar.put("year", year);
 
         return ar;
     }

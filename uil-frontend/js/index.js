@@ -282,8 +282,275 @@ function createTable(poggers, table) {
     }
 
 }
-function onChangeReg() {
+function getIndividualScore() {
+    $.ajax({
+        url: "http://localhost:8080/getEvents"
+    }).then(function (data, status, jqxhr) {
+        const poggers = JSON.parse(jqxhr.responseText);
+        var select = document.getElementById("events");
+        var sized = ["D", "R", "S"];
+        var event = poggers.events[poggers.words.indexOf(select.value)];
+        var type = document.getElementById("type").selectedIndex;
+        var year = document.getElementById("year").value;
+        var region = document.getElementById("region").value;
+        var district = document.getElementById("district").value;
+        var buildatable = [];
+        var async_request=[];
+        var fname = document.getElementById("fname").value
+        var lname = document.getElementById("lname").value
 
+        for(i = 2004; i <= 2022; i++) {
+            async_request.push($.ajax({
+                url:"http://localhost:8080/getScore?subject=" + event + "&year="+i + "&region=" + district + "&conf=" + region + "&district=" + sized[type] , // your url
+                method:'GET', // method GET or POST
+                success: function(data, status, jqxhr){
+                    buildatable.push(JSON.parse(data));
+                }
+            }));
+        }
+        $.when.apply(null, async_request).done(function() {
+            var combined = [];
+            for(i = 0; i < buildatable.length; i++) {
+                combined = combined.concat(buildatable[i].people);
+            }
+            // all done
+            combined.sort(function (a,b) {
+                return b.score-a.score;
+            })
+            var dir = 0;
+            var me = []
+            var y = 0;
+            for(i = 0; i < combined.length; i++) {
+                if(combined[i].name == (lname + ", " + fname)) {
+                    console.log(i)
+                    me[y] = combined[i];
+                    y++;
+                }
+            }
+            document.getElementById("results").remove();
+            var table = document.createElement("table")
+            table.id = "results";
+
+            var header = table.createTHead();
+            var row = header.insertRow(0);
+
+            var cell = row.insertCell(0);
+            cell.innerHTML = "<b>Place</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Name</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Score</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>School</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Skill</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Percent</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Conference</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>District</b>";
+            table.append(cell)
+
+            for (i = 0; i < me.length; i++) {
+                var row = document.createElement("tr")
+                var place = row.insertCell();
+                if(dir === i) {
+                    row.style.color = "white";
+                    row.style.backgroundColor = "red";
+                    row.id = "thename";
+                }
+                place.innerHTML = (i+1);
+                var name = row.insertCell();
+                name.innerHTML = (me[i].name);
+                var score = row.insertCell();
+                score.innerHTML = (me[i].score);
+                var school = row.insertCell();
+                school.innerHTML = (me[i].school);
+                var pointoff = row.insertCell();
+                pointoff.innerHTML = (me[i].score - me[dir].score);
+                var percent = row.insertCell();
+                percent.innerHTML =  ((me[i].score / me[dir].score)*100).toFixed(2) + "%";
+                var conf = row.insertCell();
+                conf.innerHTML =  me[i].region;
+                var reg = row.insertCell();
+                reg.innerHTML =  me[i].district;
+
+                row.append(place);
+                row.append(name);
+                row.append(score);
+                row.append(school);
+                row.append(pointoff);
+                row.append(percent);
+                row.append(conf);
+                row.append(reg);
+
+                table.append(row)
+                document.body.appendChild(table);
+            }
+
+        });
+    });
+}
+function getAllScoreforIndividual() {
+    $.ajax({
+        url: "http://localhost:8080/getEvents"
+    }).then(function (data, status, jqxhr) {
+        const poggers = JSON.parse(jqxhr.responseText);
+        var select = document.getElementById("events");
+        var sized = ["D", "R", "S"];
+        var event = poggers.events[poggers.words.indexOf(select.value)];
+        var type = document.getElementById("type").selectedIndex;
+        var year = document.getElementById("year").value;
+        var region = document.getElementById("region").value;
+        var district = document.getElementById("district").value;
+        var buildatable = [];
+        var async_request=[];
+        var fname = document.getElementById("fname").value
+        var lname = document.getElementById("lname").value
+        for(var x = 0; x < poggers.events.length; x++) {
+            console.log(poggers.events[x])
+            for (i = 2004; i <= 2022; i++) {
+                async_request.push($.ajax({
+                    url: "http://localhost:8080/getScore?subject=" + poggers.events[x] + "&year=" + i + "&region=" + district + "&conf=" + region + "&district=" + sized[type], // your url
+                    method: 'GET', // method GET or POST
+                    success: function (data, status, jqxhr) {
+                        buildatable.push(JSON.parse(data));
+                    }
+                }));
+            }
+        }
+        $.when.apply(null, async_request).done(function() {
+            var combined = [];
+            for(i = 0; i < buildatable.length; i++) {
+                combined = combined.concat(buildatable[i].people);
+            }
+            // all done
+            combined.sort(function (a,b) {
+                return b.score-a.score;
+            })
+            var dir = 0;
+            var me = []
+            var y = 0;
+            for(i = 0; i < combined.length; i++) {
+                if(combined[i].name == (lname + ", " + fname)) {
+                    console.log(i)
+                    me[y] = combined[i];
+                    y++;
+                }
+            }
+            document.getElementById("results").remove();
+            var table = document.createElement("table")
+            table.id = "results";
+
+            var header = table.createTHead();
+            var row = header.insertRow(0);
+
+            var cell = row.insertCell(0);
+            cell.innerHTML = "<b>Place</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Name</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Score</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>School</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Skill</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Percent</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Conference</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>District</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Event</b>";
+            table.append(cell)
+
+            var cell = row.insertCell();
+            cell.innerHTML = "<b>Year</b>";
+            table.append(cell)
+
+            for (i = 0; i < me.length; i++) {
+                var row = document.createElement("tr")
+                var place = row.insertCell();
+                if(dir === i) {
+                    row.style.color = "white";
+                    row.style.backgroundColor = "red";
+                    row.id = "thename";
+                }
+                place.innerHTML = (i+1);
+                var name = row.insertCell();
+                name.innerHTML = (me[i].name);
+                var score = row.insertCell();
+                score.innerHTML = (me[i].score);
+                var school = row.insertCell();
+                school.innerHTML = (me[i].school);
+                var pointoff = row.insertCell();
+                pointoff.innerHTML = (me[i].score - me[dir].score);
+                var percent = row.insertCell();
+                percent.innerHTML =  ((me[i].score / me[dir].score)*100).toFixed(2) + "%";
+                var conf = row.insertCell();
+                conf.innerHTML =  me[i].region;
+                var reg = row.insertCell();
+                reg.innerHTML =  me[i].district;
+                var event = row.insertCell();
+                event.innerHTML =  me[i].event;
+                var year = row.insertCell();
+                year.innerHTML =  me[i].year;
+
+                row.append(place);
+                row.append(name);
+                row.append(score);
+                row.append(school);
+                row.append(pointoff);
+                row.append(percent);
+                row.append(conf);
+                row.append(reg);
+                row.append(event);
+                row.append(year);
+
+                table.append(row)
+                document.body.appendChild(table);
+            }
+
+        });
+    });
+}
+
+
+
+
+function onChangeReg() {
     var sized = [32,4,1];
     var val = document.getElementById("type");
     document.getElementById("district").setAttribute("max", sized[val.selectedIndex]);

@@ -85,9 +85,10 @@ public class UilApiApplication {
 								pinecone.get(1).text(),
 								pinecone.get(2).text(),
 								pinecone.get(3).text(),
-								"pinecone",
+								name,
 								region,
-								conf
+								conf,
+								year
 								);
 						jsonArray.put(pers.toJson());
 					}
@@ -136,7 +137,8 @@ public class UilApiApplication {
 							pinecone.get(3).text(),
 							eventWords,
 							region,
-							conf
+							conf,
+							"year"
 
 					);
 
