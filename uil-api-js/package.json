@@ -1,0 +1,21 @@
+{
+  "name": "uil-api",
+  "version": "1.0.0",
+  "description": "A \"reimplementation\" of the UIL official scores records.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Knucklesfan",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "express": "^4.17.1",
+    "jssoup": "0.0.12",
+    "request": "^2.88.2"
+  },
+  "start": "nodemon server.js"
+}
