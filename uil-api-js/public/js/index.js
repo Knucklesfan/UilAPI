@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $.ajax({
-        url: "http://localhost:8080/getEvents"
+        url: "/getEvents"
     }).then(function (data, status, jqxhr) {
         var select = document.getElementById("events");
         const poggers = JSON.parse(jqxhr.responseText);
@@ -31,7 +31,7 @@ $(document).ready(function() {
 });
 function yourName() {
     $.ajax({
-        url: "http://localhost:8080/getEvents"
+        url: "/getEvents"
     }).then(function (data, status, jqxhr) {
         const poggers = JSON.parse(jqxhr.responseText);
         var select = document.getElementById("events");
@@ -43,7 +43,7 @@ function yourName() {
         var district = document.getElementById("district").value;
 
         $.ajax({
-            url: "http://localhost:8080/getScore?subject=" + event + "&year="+year + "&region=" + district + "&conf=" + region + "&district=" + sized[type]
+            url: "/getScore?subject=" + event + "&year="+year + "&region=" + district + "&conf=" + region + "&district=" + sized[type]
         }).then(function(data, status, jqxhr) {
             var first = document.getElementById("fname").value
             var last = document.getElementById("lname").value
@@ -73,7 +73,7 @@ function scrollToName() {
 }
 function getAllSchoolsAndSort() {
     $.ajax({
-        url: "http://localhost:8080/getEvents"
+        url: "/getEvents"
     }).then(function (data, status, jqxhr) {
         const poggers = JSON.parse(jqxhr.responseText);
         var sized = ["D","R","S"];
@@ -98,7 +98,7 @@ function getAllSchoolsAndSort() {
                 var reggie = x + "A";
                 for (i = 1; i <= max; i++) {
                     async_request.push($.ajax({
-                        url: "http://localhost:8080/getScore?subject=" + event + "&year=" + year + "&region=" + i + "&conf=" + reggie + "&district=" + sized[type], // your url
+                        url: "/getScore?subject=" + event + "&year=" + year + "&region=" + i + "&conf=" + reggie + "&district=" + sized[type], // your url
                         method: 'GET', // method GET or POST
                         success: function (data, status, jqxhr) {
                             var json = JSON.parse(data)
@@ -119,7 +119,7 @@ function getAllSchoolsAndSort() {
 
             for(i; i <= max; i++) {
                 async_request.push($.ajax({
-                    url:"http://localhost:8080/getScore?subject=" + event + "&year="+year + "&region=" + i + "&conf=" + uilregion + "&district=" + sized[type] , // your url
+                    url:"/getScore?subject=" + event + "&year="+year + "&region=" + i + "&conf=" + uilregion + "&district=" + sized[type] , // your url
                     method:'GET', // method GET or POST
                     success: function(data, status, jqxhr){
                         buildatable.push(JSON.parse(data));
@@ -284,7 +284,7 @@ function createTable(poggers, table) {
 }
 function getIndividualScore() {
     $.ajax({
-        url: "http://localhost:8080/getEvents"
+        url: "/getEvents"
     }).then(function (data, status, jqxhr) {
         const poggers = JSON.parse(jqxhr.responseText);
         var select = document.getElementById("events");
@@ -301,7 +301,7 @@ function getIndividualScore() {
 
         for(i = 2004; i <= 2022; i++) {
             async_request.push($.ajax({
-                url:"http://localhost:8080/getScore?subject=" + event + "&year="+i + "&region=" + district + "&conf=" + region + "&district=" + sized[type] , // your url
+                url:"/getScore?subject=" + event + "&year="+i + "&region=" + district + "&conf=" + region + "&district=" + sized[type] , // your url
                 method:'GET', // method GET or POST
                 success: function(data, status, jqxhr){
                     buildatable.push(JSON.parse(data));
@@ -408,7 +408,7 @@ function getIndividualScore() {
 }
 function getAllScoreforIndividual() {
     $.ajax({
-        url: "http://localhost:8080/getEvents"
+        url: "/getEvents"
     }).then(function (data, status, jqxhr) {
         const poggers = JSON.parse(jqxhr.responseText);
         var select = document.getElementById("events");
@@ -426,7 +426,7 @@ function getAllScoreforIndividual() {
             console.log(poggers.events[x])
             for (i = 2004; i <= 2022; i++) {
                 async_request.push($.ajax({
-                    url: "http://localhost:8080/getScore?subject=" + poggers.events[x] + "&year=" + i + "&region=" + district + "&conf=" + region + "&district=" + sized[type], // your url
+                    url: "/getScore?subject=" + poggers.events[x] + "&year=" + i + "&region=" + district + "&conf=" + region + "&district=" + sized[type], // your url
                     method: 'GET', // method GET or POST
                     success: function (data, status, jqxhr) {
                         buildatable.push(JSON.parse(data));

@@ -1,4 +1,4 @@
-class Person {
+class person {
 
     year;
     personName;
@@ -9,31 +9,13 @@ class Person {
     region;
     district;
 
-    constructor(name, school, score, place, rgion, dstrict)
-    {
-    this.personName = name;
-        this.schoolName = school;
-        this.scoreNum = score;
-        this.placeNum = place;
-        this.region = dstrict;
-        this.district = rgion;
-    }
-    constructor(name, school, score, place, rgion, dstrict) {
-        this.personName = name;
-        this.schoolName = school;
-        this.scoreNum = score;
-        this.placeNum = place;
-        this.region = dstrict;
-        this.district = rgion;
-
-}
     constructor(name, school, score, place, event, rgion, dstrict, yer) {
         this.personName = name;
         this.schoolName = school;
-        this.scoreNum = score;
-        this.placeNum = place;
+        this.scoreNum = parseInt(score);
+        this.placeNum = parseInt(place);
         this.scoreEvent = event;
-        this.region = dstrict;
+        this.region = parseInt(dstrict);
         this.district = rgion;
         this.year = yer;
 }
@@ -47,4 +29,8 @@ toString() {
         ", placeNum=" + this.placeNum +
         '}';
 }
+}
+
+module.exports = {
+    person
 }
