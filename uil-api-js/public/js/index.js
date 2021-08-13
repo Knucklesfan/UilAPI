@@ -1,9 +1,11 @@
 $(document).ready(function() {
     $.ajax({
-        url: "/getEvents"
+        url: "/getEvents",
     }).then(function (data, status, jqxhr) {
+        console.log(jqxhr.responseText)
         var select = document.getElementById("events");
         const poggers = JSON.parse(jqxhr.responseText);
+        console.log(poggers)
         for (i = 0; i < poggers.words.length; i++) {
             var option = document.createElement("option");
             option.text = poggers.words[i];

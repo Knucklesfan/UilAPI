@@ -1,20 +1,20 @@
 class person {
 
     year;
-    personName;
-    schoolName;
-    scoreNum;
-    placeNum;
-    scoreEvent;
+    name;
+    school;
+    score;
+    place;
+    event;
     region;
     district;
 
     constructor(name, school, score, place, event, rgion, dstrict, yer) {
-        this.personName = name;
-        this.schoolName = school;
-        this.scoreNum = parseInt(score);
-        this.placeNum = parseInt(place);
-        this.scoreEvent = event;
+        this.name = name;
+        this.school = school;
+        this.score = parseInt(score);
+        this.place = parseInt(place);
+        this.event = event;
         this.region = parseInt(dstrict);
         this.district = rgion;
         this.year = yer;
@@ -23,10 +23,10 @@ class person {
 
 toString() {
     return "Person {" +
-        "personName='" + this.personName + '\'' +
-        ", schoolName='" + this.schoolName + '\'' +
-        ", scoreNum=" + this.scoreNum +
-        ", placeNum=" + this.placeNum +
+        "personName='" + this.name + '\'' +
+        ", schoolName='" + this.school + '\'' +
+        ", scoreNum=" + this.score +
+        ", placeNum=" + this.place +
         '}';
 }
 }

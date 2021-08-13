@@ -82,8 +82,8 @@ app.get('/getEvents', (req, res) => {
                 txt.push($(element).val());
             })
             const retuData = new Object();
-            retuData.events = evts;
-            retuData.text = txt;
+            retuData.events = txt;
+            retuData.words = evts;
             res.end(JSON.stringify(retuData));
         }
     });
