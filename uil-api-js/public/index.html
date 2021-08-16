@@ -3,6 +3,7 @@
 	<title>Computer Science Compiler</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="js/index.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,8 +36,8 @@
 	</form>
 	<button onclick="getAllSchoolsAndSort()" style="display: inline">Get all scores for Event</button>
 	<button onclick="scrollToName()">Scroll to selection</button>
-	<button onclick="getAllScoreforIndividual()">Get all scores for individual</button>
-	<button onclick="getIndividualScore()">Get Individual Score and Generate Chart</button><br><br>
+	<button onclick="getAllScoreforIndividual(false)">Get all scores for individual</button>
+	<button onclick="getAllScoreforIndividual(true)">Get all scores for individual and Generate Chart</button><br><br>
 
 	<div id="tableholder">
 		<table id="results">
@@ -47,9 +48,12 @@
 				<th>School</th>
 				<th>Skill</th>
 				<th>Percent</th>
-
 			</tr>
 		</table>
 	</div>
+	<canvas id="myChart" width="800" height="800" style="
+	margin-left: auto;
+    margin-right: auto;
+"></canvas>
 </body>
 </html>

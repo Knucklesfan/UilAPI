@@ -31,13 +31,13 @@ app.get('/getScore', (req, res) => {
         req.query.conf = "2A";
     }
     if(req.query.year == undefined) {
-        req.query.year = "2019";
+        req.query.year = "2021";
     }
     if(req.query.district == undefined) {
         req.query.district = "D";
     }
     let link = "";
-    if(parseInt(req.query.year) !== new Date().getFullYear()) {
+    if(parseInt(req.query.year) !== 2022) {
         link = ("http://utdirect.utexas.edu/uil/vlcp_pub_arch.WBX?s_event_abbr=" + req.query.subject + "?s_year="+ req.query.year +"&s_level_id=" + req.query.district + "&s_level_nbr=" + req.query.region + "&s_conference=" + req.query.conf + "&s_submit_sw=X&s_year="+req.query.year+"&s_conference="+req.query.conf+"&s_level_id="+req.query.region+"&s_gender=&s_round=&s_dept=C&s_area_zone=");
     }
     else {
@@ -54,10 +54,11 @@ app.get('/getScore', (req, res) => {
                     return true;
                 }
                 const tds = $(element).find("td");
-                let pers = new person.person($(tds[0]).text(),$(tds[1]).text(),$(tds[2]).text(),$(tds[3]).text(),req.query.subject,req.query.region,req.query.conf,req.query.year)
-                jsonArray.push(pers);
+                if(isNaN($(tds[1]).text())) {
+                    let pers = new person.person($(tds[0]).text(),$(tds[1]).text(),$(tds[2]).text(),$(tds[3]).text(),req.query.subject,req.query.region,req.query.conf,req.query.year)
+                    jsonArray.push(pers);
+                }
             });
-
             //console.log(texts[2]);
             //console.log()
             //list.shift();

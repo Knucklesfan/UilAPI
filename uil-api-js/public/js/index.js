@@ -1,3 +1,5 @@
+let myChart;
+
 $(document).ready(function() {
     $.ajax({
         url: "/getEvents",
@@ -184,6 +186,8 @@ function getAllSchoolsAndSort() {
             var cell = row.insertCell();
             cell.innerHTML = "<b>District</b>";
             table.append(cell)
+            numbs = [];
+            labls = [];
 
                 for (i = 0; i < combined.length; i++) {
                     var row = document.createElement("tr")
@@ -220,7 +224,11 @@ function getAllSchoolsAndSort() {
 
                     table.append(row)
                     document.body.appendChild(table);
+                    numbs.push(combined[i].score);
+                    labls.push(combined[i].name)
                 }
+            addChart(numbs,labls,undefined)
+
 
         });
 
@@ -228,6 +236,8 @@ function getAllSchoolsAndSort() {
 
 }
 function createTable(poggers, table) {
+    numbs = [];
+    labls = [];
     var header = table.createTHead();
 // Create an empty <tr> element and add it to the first position of <thead>:
     var row = header.insertRow(0);
@@ -280,10 +290,15 @@ function createTable(poggers, table) {
         row.append(pointoff);
 
         table.append(row)
-        document.body.appendChild(table);
+        document.getElementById("tableholder").appendChild(table);
+        numbs.push(poggers.people[i].score);
+        labls.push(poggers.people[i].name)
     }
+    addChart(numbs,labls,undefined)
 
 }
+//It's been so long since I've written this code that I legitimately have no idea what it does anymore.
+/**
 function getIndividualScore() {
     $.ajax({
         url: "/getEvents"
@@ -408,7 +423,9 @@ function getIndividualScore() {
         });
     });
 }
-function getAllScoreforIndividual() {
+ **/
+
+function getAllScoreforIndividual(updateChart) {
     $.ajax({
         url: "/getEvents"
     }).then(function (data, status, jqxhr) {
@@ -426,15 +443,13 @@ function getAllScoreforIndividual() {
         var lname = document.getElementById("lname").value
         for(var x = 0; x < poggers.events.length; x++) {
             console.log(poggers.events[x])
-            for (i = 2004; i <= 2022; i++) {
                 async_request.push($.ajax({
-                    url: "/getScore?subject=" + poggers.events[x] + "&year=" + i + "&region=" + district + "&conf=" + region + "&district=" + sized[type], // your url
+                    url: "/getScore?subject=" + poggers.events[x] + "&year=" + year + "&region=" + district + "&conf=" + region + "&district=" + sized[type], // your url
                     method: 'GET', // method GET or POST
                     success: function (data, status, jqxhr) {
                         buildatable.push(JSON.parse(data));
                     }
                 }));
-            }
         }
         $.when.apply(null, async_request).done(function() {
             var combined = [];
@@ -449,13 +464,16 @@ function getAllScoreforIndividual() {
             var me = []
             var y = 0;
             for(i = 0; i < combined.length; i++) {
-                if(combined[i].name == (lname + ", " + fname)) {
+                if(combined[i].name === (lname + ", " + fname)) {
                     console.log(i)
                     me[y] = combined[i];
                     y++;
                 }
             }
-            document.getElementById("results").remove();
+            var doc = document.getElementById("results");
+            if(doc != undefined) {
+                doc.remove();
+            }
             var table = document.createElement("table")
             table.id = "results";
 
@@ -501,7 +519,8 @@ function getAllScoreforIndividual() {
             var cell = row.insertCell();
             cell.innerHTML = "<b>Year</b>";
             table.append(cell)
-
+            numbs = [];
+            labls = [];
             for (i = 0; i < me.length; i++) {
                 var row = document.createElement("tr")
                 var place = row.insertCell();
@@ -542,13 +561,15 @@ function getAllScoreforIndividual() {
                 row.append(year);
 
                 table.append(row)
-                document.body.appendChild(table);
+                document.getElementById("tableholder").appendChild(table);
+                numbs.push(me[i].score);
+                labls.push(me[i].event)
             }
+            addChart(numbs,labls,undefined)
 
         });
     });
 }
-
 
 
 
@@ -557,4 +578,47 @@ function onChangeReg() {
     var val = document.getElementById("type");
     document.getElementById("district").setAttribute("max", sized[val.selectedIndex]);
     document.getElementById("district").value = sized[val.selectedIndex];
+}
+function addChart(dete, labls, title) {
+    let data = {
+        labels: labls,
+        datasets: [
+            {
+                label: 'Dataset 1',
+                data: dete,
+                backgroundColor: Object.values({
+                    red: 'rgb(255, 99, 132)',
+                    orange: 'rgb(255, 159, 64)',
+                    yellow: 'rgb(255, 205, 86)',
+                    green: 'rgb(75, 192, 192)',
+                    blue: 'rgb(54, 162, 235)',
+                    purple: 'rgb(153, 102, 255)',
+                    grey: 'rgb(201, 203, 207)'
+                }),
+            }
+        ]
+    };
+    if(myChart != undefined) {
+        myChart.destroy();
+    }
+    myChart = new Chart(
+        document.getElementById('myChart'),
+        {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Score Results'
+                    }
+                }
+            },
+        }
+    );
+
 }
