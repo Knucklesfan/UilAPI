@@ -84,6 +84,25 @@ function yourName() {
     });
 
 }
+function sortTwoArrays(arr1, arr2) {
+    let n = arr1.length;
+    for(i = 0; i < n-1; i++) {
+        let min = i;
+        for(j = i+1; j < n; j++) {
+            if(arr1[j] > arr1[min]) {
+                min = j;
+            }
+        }
+        let tmp1 = arr1[min];
+        arr1[min] = arr1[i];
+        arr1[i] = tmp1;
+
+        let tmp2 = arr2[min];
+        arr2[min] = arr2[i];
+        arr2[i] = tmp2;
+
+    }
+}
 function scrollToName() {
     var elmnt = document.getElementById("thename");
     elmnt.scrollIntoView();
@@ -238,11 +257,12 @@ function getAllSchoolsAndSort() {
                     row.append(reg);
 
                     table.append(row)
-                    document.body.appendChild(table);
+                    document.getElementById("tableholder").appendChild(table);
                     numbs.push(combined[i].score);
                     labls.push(combined[i].name)
                 }
             addChart(numbs,labls,undefined)
+            generateScoreTable(combined)
 
 
         });
@@ -308,9 +328,70 @@ function createTable(poggers, table) {
         numbs.push(poggers.people[i].score);
         labls.push(poggers.people[i].name)
     }
+    generateScoreTable(poggers.people);
     addChart(numbs,labls,undefined)
 
 }
+
+function generateScoreTable(people) {
+    if(document.getElementById("teamtable") != null) {
+        document.getElementById("teamtable").remove();
+    }
+    var table = document.createElement("table")
+    table.id = "teamtable";
+    var header = table.createTHead();
+// Create an empty <tr> element and add it to the first position of <thead>:
+    var row = header.insertRow(0);
+
+// Insert a new cell (<td>) at the first position of the "new" <tr> element:
+    var cell = row.insertCell(0);
+
+// Add some bold text in the new cell:
+    cell.innerHTML = "<b>Place</b>";
+    table.append(cell)
+    // Insert a new cell (<td>) at the first position of the "new" <tr> element:
+    var cell = row.insertCell();
+
+// Add some bold text in the new cell:
+    cell.innerHTML = "<b>School</b>";
+    table.append(cell)
+    var cell = row.insertCell();
+
+// Add some bold text in the new cell:
+    cell.innerHTML = "<b>Score</b>";
+    table.append(cell)
+    const map1 = new Map();
+    for (i = 0; i < people.length; i++) {
+        if(map1.get(people[i].school) === undefined) {
+            map1.set(people[i].school, 0);
+        }
+
+        map1.set(people[i].school, map1.get(people[i].school) + parseInt(people[i].score));
+    }
+    var keyz = Array.from(map1.keys());
+    var values = Array.from(map1.values());
+
+    sortTwoArrays(values, keyz);
+
+    for (i = 0; i < keyz.length; i++) {
+        var row = document.createElement("tr")
+        var place = row.insertCell();
+        place.innerHTML = (i+1);
+        var name = row.insertCell();
+        name.innerHTML = (keyz[i]);
+        var score = row.insertCell();
+        score.innerHTML = (values[i]);
+
+        row.append(place);
+        row.append(name);
+        row.append(score);
+        table.append(row)
+        document.getElementById("tableholder").appendChild(table);
+    }
+
+
+}
+
 //It's been so long since I've written this code that I legitimately have no idea what it does anymore.
 /**
 function getIndividualScore() {
@@ -586,6 +667,7 @@ function getAllScoreforIndividual(updateChart) {
                 numbs.push(me[i].score);
                 labls.push(me[i].event)
             }
+            generateScoreTable(me)
             addChart(numbs,labls,undefined)
 
         });
