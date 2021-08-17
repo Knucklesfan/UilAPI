@@ -18,10 +18,8 @@
 		<select id="year"></select><br><br>
 		<label>Conference:</label>
 		<select id="region"></select>
-		<label>District:</label>
+		<label>District/Region:</label>
 		<input type="number" id="district" min="1" max="32" value="20"></input>
-		<label>Region:</label>
-		<input type="number" id="reg" min="1" max="4" value="3"></input><br><br>
 		<label>Host Type:</label>
 		<select id="type" onchange="">
 			<option>District</option>
@@ -37,8 +35,7 @@
 	<button onclick="getAllSchoolsAndSort()" style="display: inline">Get all scores for Event</button>
 	<button onclick="scrollToName()">Scroll to selection</button>
 	<button onclick="getAllScoreforIndividual(false)">Get all scores for individual</button>
-	<button onclick="getAllScoreforIndividual(true)">Get all scores for individual and Generate Chart</button><br><br>
-
+	<br><br>
 	<div id="tableholder">
 		<table id="results">
 			<tr>

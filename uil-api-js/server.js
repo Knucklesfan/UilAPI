@@ -43,7 +43,7 @@ app.get('/getScore', (req, res) => {
     else {
         link = ("http://utdirect.utexas.edu/uil/vlcp_results.WBX?s_event_abbr=" + req.query.subject + "?s_year="+ req.query.year +"&s_level_id=" + req.query.district + "&s_level_nbr=" + req.query.region + "&s_conference=" + req.query.conf + "&s_area_zone=&s_submit_sw=X");
     }
-
+    console.log(link)
     request(link, function (error, response, html) {
         if (!error && response.statusCode == 200) {
             let $ = cheerio.load(html);

@@ -38,23 +38,36 @@ function yourName() {
         url: "/getEvents"
     }).then(function (data, status, jqxhr) {
         const poggers = JSON.parse(jqxhr.responseText);
-        var select = document.getElementById("events");
         var sized = ["D","R","S"];
-        var event = poggers.events[poggers.words.indexOf(select.value)];
         var type = document.getElementById("type").selectedIndex;
+        var loopers = [32,4,1];
+        var max = loopers[type];
+        var select = document.getElementById("events");
+        var fname = document.getElementById("fname").value;
+        var lname = document.getElementById("lname").value;
+        var event = poggers.events[poggers.words.indexOf(select.value)];
         var year = document.getElementById("year").value;
-        var region = document.getElementById("region").value;
+        var uilregion = document.getElementById("region").value;
         var district = document.getElementById("district").value;
 
+        var statewide = document.getElementById("czech").checked;
+        var getOnly = document.getElementById("getonly").checked;
+        var buildatable = [];
+        var async_request=[];
+        const rl  = "/getScore?subject=" + event + "&year="+year + "&region=" + district + "&conf=" + uilregion + "&district=" + sized[type];
+        console.log(rl);
+
         $.ajax({
-            url: "/getScore?subject=" + event + "&year="+year + "&region=" + district + "&conf=" + region + "&district=" + sized[type]
+            url: rl
         }).then(function(data, status, jqxhr) {
+
             var first = document.getElementById("fname").value
             var last = document.getElementById("lname").value
             var name = last + ", " + first;
             const poggers = JSON.parse(jqxhr.responseText);
             var i = 0;
             var person;
+            poggers.people.pop();
             while(i < poggers.people.length) {
                 if(poggers.people[i].name.valueOf() == name.valueOf()) {
                     person = (poggers.people[i]);
@@ -91,7 +104,6 @@ function getAllSchoolsAndSort() {
         var year = document.getElementById("year").value;
         var uilregion = document.getElementById("region").value;
         var district = document.getElementById("district").value;
-        var reg = document.getElementById("reg").value;
 
         var statewide = document.getElementById("czech").checked;
         var getOnly = document.getElementById("getonly").checked;
@@ -116,7 +128,7 @@ function getAllSchoolsAndSort() {
             console.log(getOnly)
             var i = 1;
             if(getOnly) {
-                i = 1+8*(reg-1);
+                i = 1+8*(district-1);
                 max = i+7;
             }
             console.log("min: " + i + " max: " + max)
@@ -126,14 +138,17 @@ function getAllSchoolsAndSort() {
                     url:"/getScore?subject=" + event + "&year="+year + "&region=" + i + "&conf=" + uilregion + "&district=" + sized[type] , // your url
                     method:'GET', // method GET or POST
                     success: function(data, status, jqxhr){
+                        console.log(jqxhr.responseText);
                         buildatable.push(JSON.parse(data));
                     }
                 }));
             }
         }
+
         $.when.apply(null, async_request).done( function(){
             var combined = [];
             for(i = 0; i < buildatable.length; i++) {
+                buildatable[i].people.pop();
                 combined = combined.concat(buildatable[i].people);
             }
             // all done
@@ -269,7 +284,6 @@ function createTable(poggers, table) {
 // Add some bold text in the new cell:
     cell.innerHTML = "<b>Skill</b>";
     table.append(cell)
-
     for (i = 0; i < poggers.people.length; i++) {
         var row = document.createElement("tr")
         var place = row.insertCell();
@@ -430,21 +444,27 @@ function getAllScoreforIndividual(updateChart) {
         url: "/getEvents"
     }).then(function (data, status, jqxhr) {
         const poggers = JSON.parse(jqxhr.responseText);
-        var select = document.getElementById("events");
-        var sized = ["D", "R", "S"];
-        var event = poggers.events[poggers.words.indexOf(select.value)];
+        var sized = ["D","R","S"];
         var type = document.getElementById("type").selectedIndex;
+        var loopers = [32,4,1];
+        var max = loopers[type];
+        var select = document.getElementById("events");
+        var fname = document.getElementById("fname").value;
+        var lname = document.getElementById("lname").value;
+        var event = poggers.events[poggers.words.indexOf(select.value)];
         var year = document.getElementById("year").value;
-        var region = document.getElementById("region").value;
+        var uilregion = document.getElementById("region").value;
         var district = document.getElementById("district").value;
+
+        var statewide = document.getElementById("czech").checked;
+        var getOnly = document.getElementById("getonly").checked;
         var buildatable = [];
         var async_request=[];
-        var fname = document.getElementById("fname").value
-        var lname = document.getElementById("lname").value
         for(var x = 0; x < poggers.events.length; x++) {
             console.log(poggers.events[x])
-                async_request.push($.ajax({
-                    url: "/getScore?subject=" + poggers.events[x] + "&year=" + year + "&region=" + district + "&conf=" + region + "&district=" + sized[type], // your url
+            const rl  = "/getScore?subject=" + poggers.events[x] + "&year="+year + "&region=" + district + "&conf=" + uilregion + "&district=" + sized[type];
+            async_request.push($.ajax({
+                    url: rl, // your url
                     method: 'GET', // method GET or POST
                     success: function (data, status, jqxhr) {
                         buildatable.push(JSON.parse(data));
@@ -454,6 +474,7 @@ function getAllScoreforIndividual(updateChart) {
         $.when.apply(null, async_request).done(function() {
             var combined = [];
             for(i = 0; i < buildatable.length; i++) {
+                buildatable[i].people.pop();
                 combined = combined.concat(buildatable[i].people);
             }
             // all done
