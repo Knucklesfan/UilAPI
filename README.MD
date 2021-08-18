@@ -45,3 +45,64 @@ The following features are very possible in the near future.
  1. Get scores from multiple years together for everyone or for a specific person
  2. Improve formatting of page
  3. Clean up the ugly code.
+
+# API Specification
+
+The API server has two functions, /getScore and /getEvents. The following is an explaination of the functions of both.
+# /getScore
+The getScore call takes 5 inputs, and returns one array of JsonObjects.
+Inputs:
+|Input | Type|
+|--|--|
+| subject | String |
+| region  | Number |
+| conf    | String |
+| year    | Number |
+| district| String |
+|||
+
+Outputs:
+|Output| Type|
+|--|--|
+| people | Person[]|
+|||
+
+# /getEvents
+The getEvents call takes 0 inputs, and returns two arrays of Strings.
+Events is the internal name of the event, while words is the human legible equivalent.
+Inputs:
+|Input | Type|
+|--|--|
+| none| null |
+|||
+
+Outputs:
+|Output| Type|
+|--|--|
+| events | String[]|
+| words  | String[]|
+|||
+
+# Person Class
+The Person class is returned by the /getScore function. The person class is defined as this:
+
+Public Variables:
+|Output| Type|
+|--|--|
+| year | String|
+| name | String|
+| school| String|
+| event| String|
+| district| String|
+| score| Number|
+| place| Number|
+| region| Number|
+|||
+
+Public methods:
+|Method| Type|
+|--|--|
+| toString()| String|
+|||
+
+
