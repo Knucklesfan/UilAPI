@@ -1,9 +1,17 @@
 
-
-
+var fs = require('fs'),
+    http = require('http'),
+    https = require('https');
 const express = require('express');
 const app = express();
-const PORT = 80;
+const HTTPPORT = 80;
+const HTTPSPORT = 443;
+
+const options = {
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem'),
+};
+
 const cheerio = require('cheerio');
 const person = require("./person.js");
 
@@ -89,9 +97,10 @@ app.get('/getEvents', (req, res) => {
     });
 
 });
-app.get('/getAllScores', (req, res) => {
-    res.end("Hello world.");
+
+const server = https.createServer(options, app).listen(HTTPPORT, function(){
+    console.log("Server listening on port: " + HTTPPORT);
 });
 
-
-app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
+//app.listen(HTTPPORT, () => console.log(`Server listening on port: ${PORT}`));
+//app.listen(HTTPSPORT, () => console.log(`Server listening on port: ${PORT}`));
