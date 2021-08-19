@@ -4,10 +4,8 @@ $(document).ready(function() {
     $.ajax({
         url: "/getEvents",
     }).then(function (data, status, jqxhr) {
-        console.log(jqxhr.responseText)
         var select = document.getElementById("events");
         const poggers = JSON.parse(jqxhr.responseText);
-        console.log(poggers)
         for (i = 0; i < poggers.words.length; i++) {
             var option = document.createElement("option");
             option.text = poggers.words[i];
@@ -55,7 +53,6 @@ function yourName() {
         var buildatable = [];
         var async_request=[];
         const rl  = "/getScore?subject=" + event + "&year="+year + "&region=" + district + "&conf=" + uilregion + "&district=" + sized[type];
-        console.log(rl);
 
         $.ajax({
             url: rl
@@ -144,20 +141,17 @@ function getAllSchoolsAndSort() {
             }
         }
         else {
-            console.log(getOnly)
             var i = 1;
             if(getOnly) {
                 i = 1+8*(district-1);
                 max = i+7;
             }
-            console.log("min: " + i + " max: " + max)
 
             for(i; i <= max; i++) {
                 async_request.push($.ajax({
                     url:"/getScore?subject=" + event + "&year="+year + "&region=" + i + "&conf=" + uilregion + "&district=" + sized[type] , // your url
                     method:'GET', // method GET or POST
                     success: function(data, status, jqxhr){
-                        console.log(jqxhr.responseText);
                         buildatable.push(JSON.parse(data));
                     }
                 }));
@@ -171,7 +165,6 @@ function getAllSchoolsAndSort() {
                 combined = combined.concat(buildatable[i].people);
             }
             // all done
-            console.log(lname+", "+fname)
             combined.sort(function (a,b) {
                 return b.score-a.score;
             })
@@ -542,7 +535,6 @@ function getAllScoreforIndividual(updateChart) {
         var buildatable = [];
         var async_request=[];
         for(var x = 0; x < poggers.events.length; x++) {
-            console.log(poggers.events[x])
             const rl  = "/getScore?subject=" + poggers.events[x] + "&year="+year + "&region=" + district + "&conf=" + uilregion + "&district=" + sized[type];
             async_request.push($.ajax({
                     url: rl, // your url
@@ -567,7 +559,6 @@ function getAllScoreforIndividual(updateChart) {
             var y = 0;
             for(i = 0; i < combined.length; i++) {
                 if(combined[i].name === (lname + ", " + fname)) {
-                    console.log(i)
                     me[y] = combined[i];
                     y++;
                 }
