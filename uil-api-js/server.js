@@ -9,12 +9,11 @@ var certificate = fs.readFileSync('cert.pem', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 
 const app = express();
-const HTTPPORT = 80;
-const HTTPSPORT = 443;
 
 const options = {
     key: fs.readFileSync('./key.pem'),
     cert: fs.readFileSync('./cert.pem'),
+    passphrase:'INSERTHERE'
 };
 
 const cheerio = require('cheerio');
