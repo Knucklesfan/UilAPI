@@ -3,6 +3,11 @@ var fs = require('fs'),
     http = require('http'),
     https = require('https');
 const express = require('express');
+var privateKey  = fs.readFileSync('key.pem', 'utf8');
+var certificate = fs.readFileSync('cert.pem', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
+
 const app = express();
 const HTTPPORT = 80;
 const HTTPSPORT = 443;
@@ -98,9 +103,11 @@ app.get('/getEvents', (req, res) => {
 
 });
 
-const server = https.createServer(options, app).listen(HTTPPORT, function(){
-    console.log("Server listening on port: " + HTTPPORT);
-});
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(8080);
+httpsServer.listen(8443);
 
 //app.listen(HTTPPORT, () => console.log(`Server listening on port: ${PORT}`));
 //app.listen(HTTPSPORT, () => console.log(`Server listening on port: ${PORT}`));
