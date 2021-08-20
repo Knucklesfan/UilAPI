@@ -1,21 +1,7 @@
 
-var fs = require('fs'),
-    http = require('http'),
-    https = require('https');
 const express = require('express');
-var privateKey  = fs.readFileSync('key.pem', 'utf8');
-var certificate = fs.readFileSync('cert.pem', 'utf8');
-
-var credentials = {key: privateKey, cert: certificate};
-
 const app = express();
-
-const options = {
-    key: fs.readFileSync('./key.pem'),
-    cert: fs.readFileSync('./cert.pem'),
-    passphrase:'INSERTHERE'
-};
-
+const PORT = 80;
 const cheerio = require('cheerio');
 const person = require("./person.js");
 
@@ -101,12 +87,9 @@ app.get('/getEvents', (req, res) => {
     });
 
 });
+app.get('/getAllScores', (req, res) => {
+    res.end("Hello world.");
+});
 
-var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(8080);
-httpsServer.listen(8443);
-
-//app.listen(HTTPPORT, () => console.log(`Server listening on port: ${PORT}`));
-//app.listen(HTTPSPORT, () => console.log(`Server listening on port: ${PORT}`));
+app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
