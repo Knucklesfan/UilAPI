@@ -704,11 +704,15 @@ function addChart(dete, labls, title) {
                 responsive: false,
                 plugins: {
                     legend: {
+                        labels: {
+                            color: '#FFFFFF',
+                        },
                         position: 'top',
                     },
                     title: {
                         display: true,
-                        text: 'Score Results'
+                        text: 'Score Results',
+                        color: '#FFFFFF'
                     }
                 }
             },
