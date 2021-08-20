@@ -7,6 +7,28 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="topnav">
+	<a class="active" href="https://www.uiltexas.org/">UIL Official Website</a>
+	<a href="http://utdirect.utexas.edu/uil/vlcp_pub_arch.WBX">UIL Scoring Website</a>
+	<a href="http://knuxstuff.com">My Website</a>
+	<a href="mailto: cparker22@myslocum.org">Contact</a>
+	<a href="https://github.com/Knucklesfan/UilAPI">Fork it on Github!</a>
+
+</div>
+
+<div id="maindiv">
+
+	<image src="images/uilapilogo.png" style="
+  display: block;
+  max-width:50%;
+  max-height:300px;
+  width: auto;
+  height: auto;
+  margin-left:auto;
+  margin-right:auto;
+"></image>
+	<br><br>
+	<div id="givebg">
 	<form action="JavaScript:yourName()" style="display: inline">
 		<label for="fname">First name:</label>
 		<input type="text" id="fname" name="fname">
@@ -32,10 +54,13 @@
 		<input type="submit" value="District Event Score">
 
 	</form>
-	<button onclick="getAllSchoolsAndSort()" style="display: inline">Get all scores for Event</button>
+		<button onclick="getAllSchoolsAndSort()" style="display: inline">Get all scores for Event</button>
 	<button onclick="scrollToName()">Scroll to selection</button>
 	<button onclick="getAllScoreforIndividual(false)">Get all scores for individual</button>
 	<br><br>
+	</div>
+	<br><br>
+
 	<div id="tableholder">
 		<table id="results">
 			<tr>
@@ -60,5 +85,6 @@
 	margin-left: auto;
     margin-right: auto;
 "></canvas>
+</div>
 </body>
 </html>
