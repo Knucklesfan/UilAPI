@@ -15,12 +15,12 @@ h1 {
 table {
     margin-left: auto;
     margin-right: auto;
-    background-color: white;
-    border-color: black;
-    border-width: 2px;
-    border-style: solid;
     text-align: center;
     display: inline-block;
+    border: 5px groove #fc3b3b;
+    border-radius: 12px;
+    background: #ffc9c9;
+
 }
 #givebg {
     border: 5px inset #8D9BFF;
@@ -29,9 +29,10 @@ table {
     padding: 8px;
 }
 td, th {
-    border: 1px dashed dimgrey;
+    border: 1px solid dimgrey;
     text-align: center;
     padding: 8px;
+    //background: #f2f2f2;
 }
 .topnav {
     background-color: #333;
