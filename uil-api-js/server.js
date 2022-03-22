@@ -45,15 +45,30 @@ app.get('/getScore', (req, res) => {
         if (!error && response.statusCode == 200) {
             let $ = cheerio.load(html);
             let jsonArray = [];
-
+            let swapscore = true;
             $("body > div > form > table > tbody > tr").each((index, element) => {
                 if(index === 0) {
+                    const tds = $(element).find("td");
+                    for(var i = 0; i < tds.length;i++) {
+                        if($(tds[i]).text().toLowerCase() === "score") {
+                            swapscore = false;
+                            return true;
+                        }
+                    }
+                    console.log(swapscore)
                     return true;
                 }
+
                 const tds = $(element).find("td");
                 if(isNaN($(tds[1]).text())) {
-                    let pers = new person.person($(tds[0]).text(),$(tds[1]).text(),$(tds[2]).text(),$(tds[3]).text(),req.query.subject,req.query.region,req.query.conf,req.query.year)
-                    jsonArray.push(pers);
+                    if(swapscore) {
+                        let pers = new person.person($(tds[0]).text(),$(tds[1]).text(),$(tds[3]).text(),$(tds[2]).text(),req.query.subject,req.query.region,req.query.conf,req.query.year)
+                        jsonArray.push(pers);
+                    }
+                    else {
+                        let pers = new person.person($(tds[0]).text(),$(tds[1]).text(),$(tds[2]).text(),$(tds[3]).text(),req.query.subject,req.query.region,req.query.conf,req.query.year)
+                        jsonArray.push(pers);
+                    }
                 }
             });
             //console.log(texts[2]);

@@ -1,4 +1,5 @@
 let myChart;
+let bargraph;
 
 $(document).ready(function() {
     $.ajax({
@@ -72,7 +73,10 @@ function yourName() {
                 }
                 i++;
             }
-            document.getElementById("results").remove();
+            var doc = document.getElementById("results");
+            if(doc != undefined) {
+                doc.remove();
+            }
             var table = document.createElement("table")
             table.id = "results";
             createTable(poggers, table);
@@ -80,6 +84,28 @@ function yourName() {
         });
     });
 
+}
+
+function generatesums(array) {
+    let ret = []
+    for(i = 0; i < array.length; i++) {
+        var tot = 0;
+        for(x = 0; x < array[i].scores.length; x++) {
+            tot += array[i].scores[x];
+        }
+        ret.push({
+            "x": array[i].year,
+            "y": tot/array[i].scores.length
+        });
+    }
+    return ret;
+}
+function combine(array) {
+    let ret = [];
+    for(i = 0; i < array.length; i++) {
+        ret.concat(array[i].scores);
+    }
+    return ret;
 }
 function sortTwoArrays(arr1, arr2) {
     let n = arr1.length;
@@ -103,6 +129,49 @@ function sortTwoArrays(arr1, arr2) {
 function scrollToName() {
     var elmnt = document.getElementById("thename");
     elmnt.scrollIntoView();
+}
+
+function getAllScoresForAllSchoolsAllTime() {
+    $.ajax({
+        url: "/getEvents"
+    }).then(function (data, status, jqxhr) {
+        const poggers = JSON.parse(jqxhr.responseText);
+        var select = document.getElementById("events");
+        var event = poggers.events[poggers.words.indexOf(select.value)];
+        var sized = ["D","R","S"];
+        var loopers = [32,4,1];
+        var max = loopers[type];
+        var type = document.getElementById("type").selectedIndex;
+        var tables = []
+        var async_request=[];
+
+        for(yeardd = 2004; yeardd <= new Date().getFullYear(); yeardd++) {
+            var buildatable = [];
+            for(x = 0; x <= 6; x++) {
+                var reggie = x + "A";
+
+                for (i = 1; i <= max; i++) {
+                    async_request.push($.ajax({
+                        url: "/getScore?subject=" + event + "&year=" + year + "&region=" + i + "&conf=" + reggie + "&district=" + sized[type], // your url
+                        method: 'GET', // method GET or POST
+                        success: function (data, status, jqxhr) {
+                            var json = JSON.parse(data)
+                            buildatable.push({"x": yeardd, "y": parseInt(json.score)});
+                        }
+                    }));
+                }
+            }
+            tables.push({
+                "year": yeardd,
+                "scores": buildatable
+            });
+
+        }
+        $.when.apply(null, async_request).done( function() {
+
+            makeLine(tables);
+        });
+});
 }
 function getAllSchoolsAndSort() {
     $.ajax({
@@ -673,6 +742,51 @@ function onChangeReg() {
     document.getElementById("district").setAttribute("max", sized[val.selectedIndex]);
     document.getElementById("district").value = sized[val.selectedIndex];
 }
+
+function makeLine(deta) {
+    let years = [];
+    for(i = 2004; i <= new Date().getFullYear(); i++) {
+        years.push(i);
+    }
+    let sep = combine(deta);
+    let avg = generatesums(deta)
+    if(bargraph != undefined) {
+        bargraph.destroy();
+    }
+
+    bargraph = new Chart(timeline, {
+        data: {
+            datasets: [{
+                type: 'line',
+                label: 'Average over time',
+                data: avg
+            }, {
+                type: 'scatter',
+                label: 'True scores',
+                data: sep,
+            }],
+            labels: years
+        },
+        options: {
+        responsive: false,
+            plugins: {
+            legend: {
+                labels: {
+                    color: '#FFFFFF',
+                },
+                position: 'top',
+            },
+            title: {
+                display: true,
+                    text: 'Score Results',
+                    color: '#FFFFFF'
+            }
+        }
+    },
+
+});
+}
+
 function addChart(dete, labls, title) {
     let data = {
         labels: labls,
