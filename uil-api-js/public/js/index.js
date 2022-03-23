@@ -140,13 +140,12 @@ function getAllScoresForAllSchoolsAllTime() {
         var event = poggers.events[poggers.words.indexOf(select.value)];
         var sized = ["D","R","S"];
         var loopers = [32,4,1];
-        var max = loopers[type];
         var type = document.getElementById("type").selectedIndex;
-        var tables = []
+        var max = loopers[type];
         var async_request=[];
+        var buildatable = [];
 
         for(yeardd = 2004; yeardd <= new Date().getFullYear(); yeardd++) {
-            var buildatable = [];
             for(x = 0; x <= 6; x++) {
                 var reggie = x + "A";
 
@@ -157,17 +156,22 @@ function getAllScoresForAllSchoolsAllTime() {
                         success: function (data, status, jqxhr) {
                             var json = JSON.parse(data)
                             buildatable.push({"x": yeardd, "y": parseInt(json.score)});
+
                         }
                     }));
                 }
             }
-            tables.push({
-                "year": yeardd,
-                "scores": buildatable
-            });
 
         }
         $.when.apply(null, async_request).done( function() {
+            var tables = []
+            for(var i = 0; i < buildatable.length; i++) {
+                if(tables[buildatable[i].x] == undefined) {
+                    tables[buildatable[i].x] = [];
+                }
+                tables[buildatable[i].x-2004].push(buildatable[i]);
+            }
+            console.log(tables)
 
             makeLine(tables);
         });
