@@ -64,10 +64,6 @@ else if(args[0] == "-h" || args[0] == "--help"){
         "");
     process.exit(0);
 }
-else {
-    //sync(new Date().getFullYear(),new Date().getFullYear());
-    getEvents(sync, new Date().getFullYear(), new Date().getFullYear());
-}
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
