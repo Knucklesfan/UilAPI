@@ -15,7 +15,7 @@ $(document).ready(function() {
         }
         var select = document.getElementById("year");
 
-        for(i = 2021; i > 2003; i--) {
+        for(i = new Date().getFullYear(); i > 2003; i--) {
             var option = document.createElement("option");
             option.text = i;
             select.add(option);

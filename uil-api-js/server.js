@@ -18,39 +18,35 @@ var request = require('request');
 
 
 const args = process.argv.slice(2);
-
-if(args[0] == "-S" || args[0] == "--sync") {
-
+function sync(startyear, endyear) {
     console.log("Beginning Sync.. This could take a while, sorry UIL Servers!");
 
-    if(req.query.subject == undefined) {
-        req.query.subject = "CSC";
-    }
-    if(req.query.region == undefined) {
-        req.query.region = "20";
-    }
-    if(req.query.conf == undefined) {
-        req.query.conf = "2A";
-    }
-    if(req.query.year == undefined) {
-        req.query.year = "2021";
-    }
-    if(req.query.district == undefined) {
-        req.query.district = "D";
-    }
+    var sized = ["D","R","S"];
+    let events = JSON.parse(getEvents()).events;
 
-    for(var year = 2004; year <= parseInt(args[1]);year++) {
+    for(var year = startyear; year <= endyear;year++) {
         for(var conf = 1; conf <= 6; conf++) {
             for(var district = 1; district <= 32; district++) {
                 for(var a = 0; a < 3; a++) {
-
+                    for(var b = 1; b < events.length; b++) {
+                        console.log("Parsing scores for " + events[b] + " for District " + district + " on Conference " + conf + "A from the year " + year + " at the " + sized[a] + " event type.")
+                        let req = new Object();
+                        req.query = new Object();
+                        req.query.subject = events[b];
+                        req.query.region = district;
+                        req.query.conf = conf + "A";
+                        req.query.year = year;
+                        req.query.district = sized[a];
+                        getScore(req, true);
+                    }
                 }
             }
         }
 
     }
-
-    process.exit(0);
+}
+if(args[0] == "-S" || args[0] == "--sync") {
+    sync(parseInt(args[1]), parseInt(args[2]));
 }
 if(args[0] == "-v" || args[0] == "--version") {
     console.log("UIL-API Version " + version + " By Cade Parker: (C) " + new Date().getFullYear() + "\n" +
@@ -60,7 +56,7 @@ if(args[0] == "-v" || args[0] == "--version") {
         "and the University of Texas at Austin");
     process.exit(0);
 }
-else {
+else if(args[0] == "-h" || args[0] == "--help"){
     console.log("Usage: node server.js [options]" +
         "options:\n" +
         "  -h, --help            show this help message and exit\n" +
@@ -75,13 +71,22 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
 });
 app.get('/getScore', (req, res) => {
-    res.end(getScore(req));
+    res.end(getScore(req, false));
 });
 app.get('/getEvents', (req, res) => {
+    res.end(getEvents());
+});
+app.get('/getAllScores', (req, res) => {
+    res.end("Hello world.");
+});
+
+
+app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
+function getEvents() {
     if(fs.existsSync("./cache/events.json")) {
         let raw = fs.readFileSync('./cache/events.json');
         let events = JSON.parse(raw);
-        res.end(JSON.stringify(events));
+        return(JSON.stringify(events));
 
 
     }
@@ -101,21 +106,12 @@ app.get('/getEvents', (req, res) => {
                 retuData.words = evts;
                 let data = JSON.stringify(retuData);
                 fs.writeFileSync('./cache/events.json', data);
-                res.end(data);
+                return(data);
             }
         });
     }
-
-});
-app.get('/getAllScores', (req, res) => {
-    res.end("Hello world.");
-});
-
-
-app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
-
-
-function getScore(req) {
+}
+function getScore(req, force) {
     if(req.query.subject == undefined) {
         req.query.subject = "CSC";
     }
@@ -139,7 +135,8 @@ function getScore(req) {
         link = ("http://utdirect.utexas.edu/uil/vlcp_results.WBX?s_event_abbr=" + req.query.subject + "?s_year="+ req.query.year +"&s_level_id=" + req.query.district + "&s_level_nbr=" + req.query.region + "&s_conference=" + req.query.conf + "&s_area_zone=&s_submit_sw=X");
     }
     var filnam = "./cache/" + req.query.subject + req.query.region + req.query.conf + req.query.year + req.query.district +".json";
-    if(fs.existsSync(filnam)) {
+    if(fs.existsSync(filnam) && !force) {
+        console.log("already found");
         let raw = fs.readFileSync(filnam);
         let events = JSON.parse(raw);
         return(JSON.stringify(events));
@@ -148,6 +145,7 @@ function getScore(req) {
     }
     else {
         request(link, function (error, response, html) {
+            console.log("Request completed for " + req.query.subject + " at region "+ req.query.region + "in conference" + req.query.conf + " with year " + req.query.year + " of event type "+ req.query.district);
             if (!error && response.statusCode == 200) {
                 let $ = cheerio.load(html);
                 let jsonArray = [];
@@ -161,7 +159,6 @@ function getScore(req) {
                                 return true;
                             }
                         }
-                        console.log(swapscore)
                         return true;
                     }
 
@@ -186,9 +183,14 @@ function getScore(req) {
                 const retuData = new Object();
                 retuData.people = jsonArray;
                 let data = JSON.stringify(retuData);
+                console.log(data);
+
                 fs.writeFileSync(filnam, data);
                 return(data);
 
+            }
+            else {
+                console.log("ERROR!");
             }
         });
 
