@@ -242,13 +242,11 @@ function getScore(req, force) {
         link = ("http://utdirect.utexas.edu/uil/vlcp_results.WBX?s_event_abbr=" + req.query.subject + "?s_year="+ req.query.year +"&s_level_id=" + req.query.district + "&s_level_nbr=" + req.query.region + "&s_conference=" + req.query.conf + "&s_area_zone=&s_submit_sw=X");
     }
     var filnam = "./cache/" + req.query.subject + req.query.region + req.query.conf + req.query.year + req.query.district +".json";
-    if(fs.existsSync(filnam) && !force) {
+    if((fs.existsSync(filnam) && !force) || req.query.year == new Date().getFullYear()) {
         console.log("already found");
         let raw = fs.readFileSync(filnam);
         let events = JSON.parse(raw);
         return(JSON.stringify(events));
-
-
     }
     else {
         request(link, function (error, response, html) {
